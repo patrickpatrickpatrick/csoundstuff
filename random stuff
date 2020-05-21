@@ -1,0 +1,1 @@
+ cc -g --std=c99 -Wall modplayer.c -o modplayer
