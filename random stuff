@@ -1,1 +1,13 @@
  cc -g --std=c99 -Wall modplayer.c -o modplayer
+
+lldb modplayer
+breakpoint set -l 18
+frame variable
+
+fread
+// ptr − This is the pointer to a block of memory with a minimum size of size*nmemb bytes.
+// size − This is the size in bytes of each element to be read.
+// nmemb − This is the number of elements, each one with a size of size bytes.
+// stream − This is the pointer to a FILE object that specifies an input stream.
+
+https://gist.github.com/kripken/59c67556dc03bb6d57052fedef1e61ab
