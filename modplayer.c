@@ -2,8 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-// i dunno http://web.mit.edu/carrien/Public/speechlab/marc_code/ADAPT_VC/rtaudio/doc/html/index.html
-// use this instead of the other one see if it's easier lol
 
 #define SAMPLE_RATE 		  (8363)
 #define FRAMES_PER_BUFFER 	  (1024)
@@ -108,52 +106,58 @@ int main(int argc, char **argv) {
 
 	fclose(fptr);
 
-	readFileBuffer(&mod_name, &mod_file, current_position, MOD_NAME_SIZE);
+	mod_name = &(mod_file[0]);
 
-	instruments = (int8_t *) malloc(sizeof(int8_t) * (NUMBER_OF_INSTRUMENTS * (INSTRUMENT_SIZE + MAX_SAMPLE_SIZE)));
-
-	for(int j = 0; j < NUMBER_OF_INSTRUMENTS; j++) {
-		int current_instrument = ((INSTRUMENT_SIZE + MAX_SAMPLE_SIZE) * j);
-		memcpy(instruments + current_instrument, mod_file + current_position, INSTRUMENT_SIZE);
-		current_position = current_position + INSTRUMENT_SIZE;
+	for (int x = 0; x < 20; x++) {
+		printf("%d\n", mod_name[x]);
 	}
 
-	readFileBuffer(&song_length, &mod_file, current_position, BYTE);
+	// readFileBuffer(&mod_name, &mod_file, current_position, MOD_NAME_SIZE);
 
-	// skip over irelevant bit
-	current_position = current_position + 1;
+	// instruments = (int8_t *) malloc(sizeof(int8_t) * (NUMBER_OF_INSTRUMENTS * (INSTRUMENT_SIZE + MAX_SAMPLE_SIZE)));
 
-	readFileBuffer(&pattern_table, &mod_file, current_position, PATTERN_TABLE_SIZE);
+	// for(int j = 0; j < NUMBER_OF_INSTRUMENTS; j++) {
+	// 	int current_instrument = ((INSTRUMENT_SIZE + MAX_SAMPLE_SIZE) * j);
+	// 	memcpy(instruments + current_instrument, mod_file + current_position, INSTRUMENT_SIZE);
+	// 	current_position = current_position + INSTRUMENT_SIZE;
+	// }
 
-	readFileBuffer(&initials, &mod_file, current_position, WORD*2);
+	// readFileBuffer(&song_length, &mod_file, current_position, BYTE);
 
-	int actual_number_of_patterns = -1;
+	// // skip over irelevant bit
+	// current_position = current_position + 1;
 
-	for (int x = 0; x < PATTERN_TABLE_SIZE; x++) {
-		if (pattern_table[x] > actual_number_of_patterns) {
-			actual_number_of_patterns = pattern_table[x];
-		}
-	}
+	// readFileBuffer(&pattern_table, &mod_file, current_position, PATTERN_TABLE_SIZE);
 
-	readFileBuffer(&patterns, &mod_file, current_position, PATTERN_SIZE*actual_number_of_patterns);
+	// readFileBuffer(&initials, &mod_file, current_position, WORD*2);
 
-	for(int j = 0; j < NUMBER_OF_INSTRUMENTS; j++) {
-		int current_instrument = ((INSTRUMENT_SIZE + MAX_SAMPLE_SIZE) * j);
-		int length_position = current_instrument + INSTRUMENT_NAME_SIZE;
-		int length = (*(instruments + length_position) << 8 | *(instruments + length_position + BYTE)) * 2;
-		memcpy(
-			instruments + current_instrument + INSTRUMENT_SIZE,
-			mod_file + current_position,
-			length
-		);
-		current_position = current_position + length;
+	// int actual_number_of_patterns = -1;
+
+	// for (int x = 0; x < PATTERN_TABLE_SIZE; x++) {
+	// 	if (pattern_table[x] > actual_number_of_patterns) {
+	// 		actual_number_of_patterns = pattern_table[x];
+	// 	}
+	// }
+
+	// readFileBuffer(&patterns, &mod_file, current_position, PATTERN_SIZE*actual_number_of_patterns);
+
+	// for(int j = 0; j < NUMBER_OF_INSTRUMENTS; j++) {
+	// 	int current_instrument = ((INSTRUMENT_SIZE + MAX_SAMPLE_SIZE) * j);
+	// 	int length_position = current_instrument + INSTRUMENT_NAME_SIZE;
+	// 	int length = (*(instruments + length_position) << 8 | *(instruments + length_position + BYTE)) * 2;
+	// 	memcpy(
+	// 		instruments + current_instrument + INSTRUMENT_SIZE,
+	// 		mod_file + current_position,
+	// 		length
+	// 	);
+	// 	current_position = current_position + length;
 		// (all_instruments->length[0] << 8 | all_instruments->length[1]) * 2
 		// need to calculate length of each sample from the data stored at the pointer
 		// and only incremenent the current position by that much
 
 		// then also need to copy the data into the memory space allocated to each
 		// instrument after
-	}
+	// }
 
 	// readFileBuffer(&patterns)
 
@@ -177,5 +181,4 @@ int main(int argc, char **argv) {
 	//aaa need to do hard stuff now lol
 	printf("%d\n", current_position);
 	printf("%ld\n", file_size);
-
 }
